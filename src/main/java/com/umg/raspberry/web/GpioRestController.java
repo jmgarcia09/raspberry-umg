@@ -31,7 +31,7 @@ public class GpioRestController {
     private Map<String,Integer> validPins;
 
     public GpioRestController() {
-        controller = null;
+        controller = GpioFactory.getInstance();
     }
 
 
