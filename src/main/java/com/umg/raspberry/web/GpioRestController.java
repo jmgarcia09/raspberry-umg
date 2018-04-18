@@ -76,17 +76,22 @@ public class GpioRestController {
     private String listenGpio(@PathVariable(name = "gpioEntry") String gpioEntry){
 
         if(validPins.containsKey(gpioEntry)){
-            final GpioPinDigitalInput myButton = controller.provisionDigitalInputPin(RaspiPin.getPinByAddress(validPins.get(gpioEntry)));
-            myButton.setShutdownOptions(true);
+            GpioPinDigitalOutput digitalPin;
+            if(!activePins.containsKey(gpioEntry)){
+                activePins.put(gpioEntry,controller.provisionDigitalOutputPin(RaspiPin.getPinByAddress(validPins.get(gpioEntry))));
+
+            }
+            digitalPin = activePins.get(gpioEntry);
+            digitalPin.setShutdownOptions(true);
             // create and register gpio pin listener
-            myButton.addListener(new GpioPinListenerDigital() {
+            digitalPin.addListener(new GpioPinListenerDigital() {
 
 
                 @Override
                 public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 
                     if(PinState.HIGH == event.getState()){
-                        logger.info("Se activo pin {}", event.getEdge().getName());
+                        logger.info("Se activo pin {}", event.getPin());
 
                     }
                 }
