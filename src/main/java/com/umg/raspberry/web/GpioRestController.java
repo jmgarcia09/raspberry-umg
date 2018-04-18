@@ -20,7 +20,7 @@ public class GpioRestController {
     private final GpioController controller;
 
     @Value("${rasp.valid.pins}")
-    private List<Integer> validPins;
+    private List<String> validPins;
 
     public GpioRestController() {
         controller = GpioFactory.getInstance();
