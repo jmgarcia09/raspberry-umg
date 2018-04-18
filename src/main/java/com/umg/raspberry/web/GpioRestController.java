@@ -50,8 +50,11 @@ public class GpioRestController {
 
         if(validPins.containsKey(gpioEntry)){
             GpioPinDigitalOutput digitalPin = controller.provisionDigitalOutputPin(RaspiPin.getPinByAddress(validPins.get(gpioEntry)));
-            controller.toggle(digitalPin);
-
+            if(digitalPin.isHigh()){
+                digitalPin.low();
+            }else {
+                digitalPin.high();
+            }
         }else {
             return "Pin not valid, check configuration";
         }
