@@ -42,6 +42,8 @@ public class GpioRestController {
             logger.info("Init pin {}", pin);
             validPins.put(pin,Integer.parseInt(pin));
         }
+
+        logger.info("Loaded pins {}", validPins.toString());
     }
 
 
