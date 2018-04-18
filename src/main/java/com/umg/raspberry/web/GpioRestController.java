@@ -1,7 +1,9 @@
 package com.umg.raspberry.web;
 
 import com.pi4j.io.gpio.*;
+import com.pi4j.io.gpio.event.GpioPinAnalogValueChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListenerAnalog;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,7 @@ public class GpioRestController {
     @Value("${rasp.valid.pins}")
     private String[] pinsConfig;
     private Map<String,Integer> validPins;
+    private Map<String,GpioPinDigitalOutput> activePins;
 
     public GpioRestController() {
         controller = GpioFactory.getInstance();
@@ -40,6 +43,7 @@ public class GpioRestController {
     @PostConstruct
     public void loadPins(){
         validPins = new HashMap<>();
+        activePins = new HashMap<>();
         for(String pin : pinsConfig){
             logger.info("Init pin {}", pin);
             validPins.put(pin,Integer.parseInt(pin));
@@ -53,12 +57,13 @@ public class GpioRestController {
     private String toggleGpio(@PathVariable(name = "gpioEntry") String gpioEntry){
 
         if(validPins.containsKey(gpioEntry)){
-            GpioPinDigitalOutput digitalPin = controller.provisionDigitalOutputPin(RaspiPin.getPinByAddress(validPins.get(gpioEntry)));
-            if(digitalPin.isHigh()){
-                digitalPin.low();
-            }else {
-                digitalPin.high();
+            GpioPinDigitalOutput digitalPin;
+            if(!activePins.containsKey(gpioEntry)){
+                activePins.put(gpioEntry,controller.provisionDigitalOutputPin(RaspiPin.getPinByAddress(validPins.get(gpioEntry))));
+
             }
+            digitalPin = activePins.get(gpioEntry);
+            digitalPin.toggle();
         }else {
             return "Pin not valid, check configuration";
         }
@@ -75,10 +80,15 @@ public class GpioRestController {
             myButton.setShutdownOptions(true);
             // create and register gpio pin listener
             myButton.addListener(new GpioPinListenerDigital() {
+
+
                 @Override
                 public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-                    // display pin state on console
-                    System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
+
+                    if(PinState.HIGH == event.getState()){
+                        logger.info("Se activo pin {}", event.getEdge().getName());
+
+                    }
                 }
 
             });
