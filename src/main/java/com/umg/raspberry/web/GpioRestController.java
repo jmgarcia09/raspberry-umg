@@ -1,6 +1,8 @@
 package com.umg.raspberry.web;
 
 import com.pi4j.io.gpio.*;
+import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,9 +66,27 @@ public class GpioRestController {
         return null;
     }
 
-    @GetMapping("/valid")
-    private String toggleGpio(){
 
-        return pinsConfig.toString();
+    @GetMapping("/{gpioEntry}/listen")
+    private String listenGpio(@PathVariable(name = "gpioEntry") String gpioEntry){
+
+        if(validPins.containsKey(gpioEntry)){
+            final GpioPinDigitalInput myButton = controller.provisionDigitalInputPin(RaspiPin.getPinByAddress(validPins.get(gpioEntry)));
+            myButton.setShutdownOptions(true);
+            // create and register gpio pin listener
+            myButton.addListener(new GpioPinListenerDigital() {
+                @Override
+                public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+                    // display pin state on console
+                    System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
+                }
+
+            });
+        }else {
+            return "Pin not valid, check configuration";
+        }
+
+        return null;
     }
+
 }
