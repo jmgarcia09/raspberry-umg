@@ -1,6 +1,8 @@
 package com.umg.raspberry.web;
 
 import com.pi4j.io.gpio.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,21 +22,26 @@ import java.util.Map;
 @RequestMapping("/rasp")
 public class GpioRestController {
 
+    private final Logger logger = LoggerFactory.getLogger(GpioRestController.class);
+
     private final GpioController controller;
 
     @Value("${rasp.valid.pins}")
-    private List<String> pinsConfig;
+    private String[] pinsConfig;
     private Map<String,Integer> validPins;
 
     public GpioRestController() {
-        controller = GpioFactory.getInstance();
+        controller = null;
     }
 
 
     @PostConstruct
     public void loadPins(){
         validPins = new HashMap<>();
-        pinsConfig.forEach(pin -> validPins.put(pin,Integer.parseInt(pin)));
+        for(String pin : pinsConfig){
+            logger.info("Init pin {}", pin);
+            validPins.put(pin,Integer.parseInt(pin));
+        }
     }
 
 
