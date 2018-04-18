@@ -28,10 +28,10 @@ public class GpioRestController {
 
 
     @GetMapping("/{gpioEntry}/toggle")
-    private String toggleGpio(@PathVariable(name = "gpioEntry") int gpioEntry){
+    private String toggleGpio(@PathVariable(name = "gpioEntry") String gpioEntry){
 
         if(validPins.contains(gpioEntry)){
-            GpioPinDigitalOutput digitalPin = controller.provisionDigitalOutputPin(RaspiPin.getPinByAddress(gpioEntry));
+            GpioPinDigitalOutput digitalPin = controller.provisionDigitalOutputPin(RaspiPin.getPinByName(gpioEntry));
             controller.toggle(digitalPin);
 
         }else {
