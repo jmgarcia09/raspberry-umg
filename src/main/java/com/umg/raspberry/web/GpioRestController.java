@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 public class GpioRestController {
 
     private final Logger logger = LoggerFactory.getLogger(GpioRestController.class);
+    private static boolean motorActive = false;
 
     private GpioController controller;
 
@@ -125,33 +126,51 @@ public class GpioRestController {
         return null;
     }
 
-    @GetMapping("/motor")
-    private String executeMotor() throws InterruptedException {
+    @GetMapping("/motor/{action}")
+    private String executeMotor(@PathVariable(name = "action") String action) throws InterruptedException {
 
-        ForkJoinPool pool = new ForkJoinPool(4);
 
-        pool.execute(() -> {
-            motorPins.parallelStream().forEach(motorPin -> {
-                GpioPinDigitalOutput pin = activePins.get(motorPin.getPinNumber());
-                for(PinState state : motorPin.getPinStates()){
-                        pin.setState(state);
-                        logger.info("Putting state {} to pin {}", state.getValue(),pin.getName());
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+
+        if("on".equalsIgnoreCase(action)){
+            if(motorActive){
+                logger.info("Motor is already running");
+                return "Motor is already running";
+            }
+
+            motorActive = true;
+            logger.info("Turning motor ON");
+
+            ForkJoinPool pool = new ForkJoinPool(4);
+
+            pool.execute(() -> {
+                motorPins.parallelStream().forEach(motorPin -> {
+                    GpioPinDigitalOutput pin = activePins.get(motorPin.getPinNumber());
+                    while(motorActive){
+                        for(PinState state : motorPin.getPinStates()){
+                            pin.setState(state);
+                            logger.info("Putting state {} to pin {}", state.getValue(),pin.getName());
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
-                }
+
+                });
             });
-        });
+            return "Executing motor.";
+        }else {
+            motorActive = false;
+            logger.info("Turning motor OFF");
+            logger.info("Return all pins to low state for motor.");
+            motorPins.forEach(motorPin -> {
+                activePins.get(motorPin.getPinNumber()).low();
+            });
+            return "Motor turning off";
+        }
 
-        pool.awaitTermination(9, TimeUnit.SECONDS);
 
-        logger.info("Return all pins to low state for motor.");
-        motorPins.forEach(motorPin -> {
-            activePins.get(motorPin.getPinNumber()).low();
-        });
-        return "Executing motor.";
     }
 
 }
