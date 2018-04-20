@@ -29,6 +29,7 @@ public class GpioRestController {
 
     private final Logger logger = LoggerFactory.getLogger(GpioRestController.class);
     private static boolean motorActive = false;
+    private static boolean rightMovement = true;
 
     private GpioController controller;
 
@@ -126,6 +127,17 @@ public class GpioRestController {
         return null;
     }
 
+    @GetMapping("/motor/inverse")
+    private String executeMotor() throws InterruptedException {
+
+        executeMotor("off");
+        logger.info("Change movement of motor...");
+        motorPins.forEach(motorPin -> Collections.reverse(motorPin.getPinStates()));
+        executeMotor("on");
+
+        return "Motor reversed";
+    }
+
     @GetMapping("/motor/{action}")
     private String executeMotor(@PathVariable(name = "action") String action) throws InterruptedException {
 
@@ -171,7 +183,6 @@ public class GpioRestController {
             });
             return "Motor turning off";
         }
-
 
     }
 
