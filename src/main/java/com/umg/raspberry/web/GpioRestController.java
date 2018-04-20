@@ -54,16 +54,16 @@ public class GpioRestController {
         logger.info("Loaded pins {}", validPins.toString());
 
         motorPins = new ArrayList<>();
-        motorPins.add(new MotorPin("31", Arrays.asList(PinState.HIGH,PinState.HIGH,
+        motorPins.add(new MotorPin("22", Arrays.asList(PinState.HIGH,PinState.HIGH,
                 PinState.LOW,PinState.LOW,PinState.LOW,PinState.LOW,PinState.LOW,PinState.HIGH)));
 
-        motorPins.add(new MotorPin("33", Arrays.asList(PinState.LOW,PinState.HIGH,
+        motorPins.add(new MotorPin("23", Arrays.asList(PinState.LOW,PinState.HIGH,
                 PinState.HIGH,PinState.HIGH,PinState.LOW,PinState.LOW,PinState.LOW,PinState.LOW)));
 
-        motorPins.add(new MotorPin("35", Arrays.asList(PinState.LOW,PinState.LOW,
+        motorPins.add(new MotorPin("24", Arrays.asList(PinState.LOW,PinState.LOW,
                 PinState.LOW,PinState.HIGH,PinState.HIGH,PinState.HIGH,PinState.LOW,PinState.LOW)));
 
-        motorPins.add(new MotorPin("37", Arrays.asList(PinState.LOW,PinState.LOW,
+        motorPins.add(new MotorPin("25", Arrays.asList(PinState.LOW,PinState.LOW,
                 PinState.LOW,PinState.LOW,PinState.LOW,PinState.HIGH,PinState.HIGH,PinState.HIGH)));
 
         motorPins
