@@ -163,7 +163,7 @@ public class GpioRestController {
                             pin.setState(state);
                             logger.info("Putting state {} to pin {}", state.getValue(),pin.getName());
                             try {
-                                Thread.sleep(500);
+                                Thread.sleep(100);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
