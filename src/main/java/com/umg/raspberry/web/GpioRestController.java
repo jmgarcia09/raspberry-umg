@@ -35,6 +35,8 @@ public class GpioRestController {
 
     @Value("${rasp.valid.pins}")
     private String[] pinsConfig;
+    @Value("${rasp.motor.time}")
+    private long motorTime;
     private Map<String,Integer> validPins;
     private Map<String,GpioPinDigitalOutput> activePins;
     private List<MotorPin> motorPins;
@@ -163,7 +165,7 @@ public class GpioRestController {
                             pin.setState(state);
                             logger.info("Putting state {} to pin {}", state.getValue(),pin.getName());
                             try {
-                                Thread.sleep(100);
+                                Thread.sleep(motorTime);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
