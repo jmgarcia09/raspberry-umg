@@ -147,10 +147,11 @@ public class GpioRestController {
                     GpioPinDigitalOutput pin = activePins.get(motorPin.getPinNumber());
                     while(motorActive){
                         for(PinState state : motorPin.getPinStates()){
+                            if(!motorActive) break;
                             pin.setState(state);
                             logger.info("Putting state {} to pin {}", state.getValue(),pin.getName());
                             try {
-                                Thread.sleep(1000);
+                                Thread.sleep(500);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -162,6 +163,7 @@ public class GpioRestController {
             return "Executing motor.";
         }else {
             motorActive = false;
+            Thread.sleep(1000);
             logger.info("Turning motor OFF");
             logger.info("Return all pins to low state for motor.");
             motorPins.forEach(motorPin -> {
