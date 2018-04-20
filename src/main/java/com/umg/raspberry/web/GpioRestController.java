@@ -29,7 +29,7 @@ public class GpioRestController {
 
     private final Logger logger = LoggerFactory.getLogger(GpioRestController.class);
 
-    private final GpioController controller;
+    private GpioController controller;
 
     @Value("${rasp.valid.pins}")
     private String[] pinsConfig;
@@ -39,11 +39,12 @@ public class GpioRestController {
 
     public GpioRestController() {
         controller = GpioFactory.getInstance();
-        loadPins();
     }
 
 
+    @PostConstruct
     public void loadPins(){
+        controller = GpioFactory.getInstance();
         validPins = new HashMap<>();
         activePins = new HashMap<>();
         for(String pin : pinsConfig){
