@@ -39,10 +39,10 @@ public class GpioRestController {
 
     public GpioRestController() {
         controller = GpioFactory.getInstance();
+        loadPins();
     }
 
 
-    @PostConstruct
     public void loadPins(){
         validPins = new HashMap<>();
         activePins = new HashMap<>();
