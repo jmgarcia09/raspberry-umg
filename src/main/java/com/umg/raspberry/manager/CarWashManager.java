@@ -95,6 +95,7 @@ public class CarWashManager {
 
     public void addListeners(){
         getPin(initProcessPin).addListener((GpioPinListenerDigital) gpioPinDigitalStateChangeEvent -> {
+            logger.info("Pin status");
             if(gpioPinDigitalStateChangeEvent.getState().isHigh() && !execute){
 
                 logger.info("Starting carwash process", gpioPinDigitalStateChangeEvent.getPin().getName());
