@@ -4,15 +4,19 @@ import com.pi4j.io.gpio.PinState;
 
 import java.util.List;
 
-public class MotorPin {
+public class RaspberryPin {
 
     private String pinNumber;
     private List<PinState> pinStates;
 
 
-    public MotorPin(String pinNumber, List<PinState> pinStates) {
+    public RaspberryPin(String pinNumber, List<PinState> pinStates) {
         this.pinNumber = pinNumber;
         this.pinStates = pinStates;
+    }
+
+    public RaspberryPin(String pinNumber) {
+        this.pinNumber = pinNumber;
     }
 
     public String getPinNumber() {
