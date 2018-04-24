@@ -47,6 +47,18 @@ public class GpioRestController {
 
     }
 
+    @GetMapping("/{gpioEntry}/listener")
+    private void setListener(@PathVariable(name = "gpioEntry") String gpioEntry){
+
+        carWashManager.getPin(gpioEntry).addListener(new GpioPinListenerDigital() {
+            @Override
+            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent gpioPinDigitalStateChangeEvent){
+                logger.info("Executing event on pin {}", gpioPinDigitalStateChangeEvent.getPin().getName());
+            }
+        });
+
+    }
+
     @GetMapping("/wash")
     private String toggleGpio() throws InterruptedException {
 
