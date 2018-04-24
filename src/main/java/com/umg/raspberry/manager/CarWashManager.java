@@ -84,6 +84,7 @@ public class CarWashManager {
         return activePins.get(pin.getPinNumber());
     }
 
+
     public GpioPinDigitalOutput getPin(String pin){
         if(!activePins.containsKey(pin)){
             activePins.put(pin,gpioController.provisionDigitalOutputPin(RaspiPin.getPinByAddress(Integer.valueOf(pin))));
@@ -94,7 +95,7 @@ public class CarWashManager {
 
 
     public void addListeners(){
-        getPin(initProcessPin).addListener((GpioPinListenerDigital) gpioPinDigitalStateChangeEvent -> {
+        gpioController.provisionDigitalInputPin(RaspiPin.getPinByAddress(Integer.valueOf(initProcessPin.getPinNumber()))).addListener((GpioPinListenerDigital) gpioPinDigitalStateChangeEvent -> {
             logger.info("Pin status");
             if(gpioPinDigitalStateChangeEvent.getState().isHigh() && !execute){
 
@@ -109,14 +110,8 @@ public class CarWashManager {
             }
         });
 
-        getPin(initProcessPin).addListener(new GpioPinListenerAnalog() {
-            @Override
-            public void handleGpioPinAnalogValueChangeEvent(GpioPinAnalogValueChangeEvent gpioPinAnalogValueChangeEvent) {
-                logger.info("Pin value {}", gpioPinAnalogValueChangeEvent.getValue());
-            }
-        });
 
-        getPin(endProcessPin).addListener((GpioPinListenerDigital) gpioPinDigitalStateChangeEvent -> {
+        gpioController.provisionDigitalInputPin(RaspiPin.getPinByAddress(Integer.valueOf(initProcessPin.getPinNumber()))).addListener((GpioPinListenerDigital) gpioPinDigitalStateChangeEvent -> {
             if(gpioPinDigitalStateChangeEvent.getState().isHigh() && execute ){
                 logger.info("Stop carwash process", gpioPinDigitalStateChangeEvent.getPin().getName());
                 try {
