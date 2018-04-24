@@ -96,6 +96,13 @@ public class CarWashManager {
             if(gpioPinDigitalStateChangeEvent.getState().isHigh() && !execute){
 
                 logger.info("Starting carwash process", gpioPinDigitalStateChangeEvent.getPin().getName());
+
+                try {
+                    startCarWash();
+                    execute = true;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
