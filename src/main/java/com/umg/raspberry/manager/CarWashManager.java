@@ -45,7 +45,7 @@ public class CarWashManager {
     public void loadPins(){
         activePins = new HashMap<>();
 
-        initProcessPin = new RaspberryPin("14");
+        initProcessPin = new RaspberryPin("3");
         endProcessPin = new RaspberryPin("26");
 
         washMotorPin = new RaspberryPin("12");
