@@ -40,6 +40,13 @@ public class GpioRestController {
         return null;
     }
 
+    @GetMapping("/{gpioEntry}/status")
+    private int getStatus(@PathVariable(name = "gpioEntry") String gpioEntry){
+
+        return carWashManager.getPin(gpioEntry).getState().getValue();
+
+    }
+
     @GetMapping("/wash")
     private String toggleGpio() throws InterruptedException {
 
