@@ -111,7 +111,7 @@ public class CarWashManager {
         });
 
 
-        gpioController.provisionDigitalInputPin(RaspiPin.getPinByAddress(Integer.valueOf(initProcessPin.getPinNumber()))).addListener((GpioPinListenerDigital) gpioPinDigitalStateChangeEvent -> {
+        gpioController.provisionDigitalInputPin(RaspiPin.getPinByAddress(Integer.valueOf(endProcessPin.getPinNumber()))).addListener((GpioPinListenerDigital) gpioPinDigitalStateChangeEvent -> {
             if(gpioPinDigitalStateChangeEvent.getState().isHigh() && execute ){
                 logger.info("Stop carwash process", gpioPinDigitalStateChangeEvent.getPin().getName());
                 try {
