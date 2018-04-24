@@ -138,7 +138,7 @@ public class CarWashManager {
         logger.info("Turning on movement motor");
         executeMotor(true,5000);
         logger.info("Turning off movement motor");
-        logger.info("Turngin on wash motor");
+        logger.info("Turning on wash motor");
         turnOnPin(washMotorPin,5000);
         logger.info("Turning off wash motor");
         logger.info("Turning on movement motor");
@@ -180,7 +180,6 @@ public class CarWashManager {
                         for(PinState state : raspberryPin.getPinStates()){
                             if(!motorActive) break;
                             pin.setState(state);
-                            logger.info("Putting state {} to pin {}", state.getValue(),pin.getName());
                             try {
                                 Thread.sleep(motorTime);
                             } catch (InterruptedException e) {
