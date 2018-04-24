@@ -1,7 +1,9 @@
 package com.umg.raspberry.manager;
 
 import com.pi4j.io.gpio.*;
+import com.pi4j.io.gpio.event.GpioPinAnalogValueChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListenerAnalog;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import com.umg.raspberry.RaspberryPin;
 import org.slf4j.Logger;
@@ -103,6 +105,13 @@ public class CarWashManager {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        getPin(initProcessPin).addListener(new GpioPinListenerAnalog() {
+            @Override
+            public void handleGpioPinAnalogValueChangeEvent(GpioPinAnalogValueChangeEvent gpioPinAnalogValueChangeEvent) {
+                logger.info("Pin value {}", gpioPinAnalogValueChangeEvent.getValue());
             }
         });
 
