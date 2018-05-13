@@ -177,23 +177,25 @@ public class CarWashManager {
             motorActive = true;
             logger.info("Turning motor ON");
 
-            ForkJoinPool pool = new ForkJoinPool(4);
-            pool.execute(() -> {
-                motorPins.parallelStream().forEach(raspberryPin -> {
-                    GpioPinDigitalOutput pin = activePins.get(raspberryPin.getPinNumber());
-                    while(motorActive){
-                        for(PinState state : raspberryPin.getPinStates()){
-                            if(!motorActive) break;
-                            pin.setState(state);
-                            try {
-                                Thread.sleep(motorTime);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                });
-            });
+            getPin("22").high();
+
+//            ForkJoinPool pool = new ForkJoinPool(4);
+//            pool.execute(() -> {
+//                motorPins.parallelStream().forEach(raspberryPin -> {
+//                    GpioPinDigitalOutput pin = activePins.get(raspberryPin.getPinNumber());
+//                    while(motorActive){
+//                        for(PinState state : raspberryPin.getPinStates()){
+//                            if(!motorActive) break;
+//                            pin.setState(state);
+//                            try {
+//                                Thread.sleep(motorTime);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                });
+//            });
 
             if(time > 0){
                 Thread.sleep(time);
